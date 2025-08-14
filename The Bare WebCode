@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Pokémon Database by shift_xd</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Elements */
+        .pokeball-bg {
+            position: fixed;
+            width: 120px;
+            height: 120px;
+            opacity: 0.1;
+            z-index: 0;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Navigation */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 30px;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn.active {
+            background: #FFDE00;
+            color: #3B4CCA;
+        }
+
+        .nav-btn:hover:not(.active) {
+            background: #3B4CCA;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            padding: 30px 0 20px;
+            margin-bottom: 10px;
+            animation: fadeIn 1s ease-out;
+            position: relative;
+        }
+
+        .logo {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2.3rem;
+            color: #FFDE00;
+            text-shadow: 4px 4px 0 #3B4CCA, -2px -2px 0 #3B4CCA, 2px -2px 0 #3B4CCA, -2px 2px 0 #3B4CCA;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px 30px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .creator {
+            color: #FF6B6B;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-weight: 600;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+        }
+
+        .subtitle {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: inline-block;
+            max-width: 90%;
+        }
+
+        /* Search Container */
+        .search-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            animation: slideUp 0.8s ease-out;
+            position: relative;
+            z-index: 20;
+        }
+
+        #search-input {
+            flex: 1;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            border-radius: 50px 0 0 50px;
+            outline: none;
+            background: transparent;
+        }
+
+        #search-btn {
+            background: #FF0000;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #search-btn:hover {
+            background: #CC0000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
+        }
+
+        /* Content Area */
+        .content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Pokemon Card */
+        .pokemon-card {
+            background: linear-gradient(to bottom right, #ffffff, #f0f0f0);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .pokemon-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .pokemon-image {
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f8f8;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .pokemon-card:hover .pokemon-image {
+            transform: scale(1.05);
+            background: #e8f4ff;
+        }
+
+        .pokemon-image img {
+            max-height: 130px;
+            max-width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .pokemon-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3B4CCA;
+            margin-bottom: 8px;
+            text-transform: capitalize;
+        }
+
+        .pokemon-id {
+            background: #3B4CCA;
+            color: white;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .pokemon-types {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .type-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        /* Stats Section */
+        .pokemon-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .stat {
+            background: #e9e9e9;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+
+        .stat-name {
+            font-weight: 600;
+            color: #3B4CCA;
+            font-size: 0.85rem;
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            font-size: 1.8rem;
+            color: white;
+            padding: 50px;
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #FFDE00;
+            animation: spin 1s linear infinite;
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.2);
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            text-align: center;
+            grid-column: 1 / -1;
+            font-size: 1.2rem;
+        }
+
+        .instructions {
+            color: #fff;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.1rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px 20px;
+            border-radius: 15px;
+            line-height: 1.7;
+        }
+
+        /* Featured Title */
+        .featured-title {
+            text-align: center;
+            color: #FFDE00;
+            font-size: 1.8rem;
+            margin: 30px 0 20px;
+            text-shadow: 2px 2px 0 #3B4CCA;
+            font-family: 'Press Start 2P', cursive;
+            letter-spacing: 1px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 30px 0 20px;
+            margin-top: 40px;
+            font-size: 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Scroll to Top Button */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #FF0000;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .scroll-top.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-top:hover {
+            background: #CC0000;
+            transform: translateY(-5px);
+        }
+
+        /* Type colors */
+        .normal { background-color: #A8A878; }
+        .fire { background-color: #F08030; }
+        .water { background-color: #6890F0; }
+        .electric { background-color: #F8D030; }
+        .grass { background-color: #78C850; }
+        .ice { background-color: #98D8D8; }
+        .fighting { background-color: #C03028; }
+        .poison { background-color: #A040A0; }
+        .ground { background-color: #E0C068; }
+        .flying { background-color: #A890F0; }
+        .psychic { background-color: #F85888; }
+        .bug { background-color: #A8B820; }
+        .rock { background-color: #B8A038; }
+        .ghost { background-color: #705898; }
+        .dragon { background-color: #7038F8; }
+        .dark { background-color: #705848; }
+        .steel { background-color: #B8B8D0; }
+        .fairy { background-color: #EE99AC; }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #FFDE00;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Pokemon Detail Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: linear-gradient(to bottom, #ffffff, #f5f5f5);
+            max-width: 900px;
+            margin: 40px auto;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.5s ease;
+        }
+
+        .modal-header {
+            background: #3B4CCA;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-transform: capitalize;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .modal-id {
+            background: #FFDE00;
+            color: #3B4CCA;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .close-btn {
+            background: #FF0000;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #CC0000;
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .modal-image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .modal-main-image {
+            width: 300px;
+            height: 300px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-main-image img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .modal-additional-images {
+            display: flex;
+            gap: 15px;
+        }
+
+        .modal-additional-image {
+            width: 80px;
+            height: 80px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-additional-image:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-additional-image img {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .modal-info {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .modal-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            color: #3B4CCA;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .stat-name {
+            font-weight: 600;
+            color: #3B4CCA;
+        }
+
+        .stat-value {
+            font-weight: 700;
+        }
+
+        .abilities-list, .moves-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .ability-badge, .move-badge {
+            background: #e0e0e0;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .history-content {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 1000px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .history-title {
+            color: #3B4CCA;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 30px;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .history-section {
+            margin-bottom: 40px;
+        }
+
+        .history-section h3 {
+            color: #FF0000;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .history-section p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+
+        .youtube-channels {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .channel-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .channel-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .channel-image {
+            height: 160px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #3B4CCA;
+        }
+
+        .channel-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .channel-info {
+            padding: 20px;
+        }
+
+        .channel-name {
+            color: #3B4CCA;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .channel-desc {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .channel-link {
+            display: inline-block;
+            background: #FF0000;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .channel-link:hover {
+            background: #CC0000;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive design */
+        @media (max-width: 1100px) {
+            .content {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+                padding: 12px 25px;
+            }
+            
+            .featured-title {
+                font-size: 1.5rem;
+            }
+            
+            .pokemon-image {
+                height: 130px;
+            }
+            
+            .modal-main-image {
+                width: 250px;
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 1.5rem;
+                padding: 10px 20px;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+                padding: 8px 15px;
+            }
+            
+            .nav-container {
+                flex-wrap: wrap;
+            }
+            
+            .nav-btn {
+                padding: 10px 15px;
+                font-size: 1rem;
+            }
+            
+            .search-container {
+                flex-direction: column;
+                border-radius: 20px;
+                max-width: 95%;
+            }
+            
+            #search-input {
+                border-radius: 20px 20px 0 0;
+                padding: 15px 20px;
+            }
+            
+            #search-btn {
+                border-radius: 0 0 20px 20px;
+                padding: 15px;
+                justify-content: center;
+            }
+            
+            .content {
+                grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+                gap: 15px;
+            }
+            
+            .featured-title {
+                font-size: 1.3rem;
+                padding: 10px;
+            }
+            
+            .pokemon-name {
+                font-size: 1.3rem;
+            }
+            
+            .modal-header {
+                padding: 15px 20px;
+            }
+            
+            .modal-title {
+                font-size: 1.8rem;
+            }
+            
+            .modal-body {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.3rem;
+            }
+            
+            .creator {
+                font-size: 0.9rem;
+            }
+            
+            .content {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .pokemon-card {
+                padding: 15px;
+            }
+            
+            .pokemon-image {
+                height: 110px;
+            }
+            
+            .type-badge {
+                padding: 5px 10px;
+                font-size: 0.75rem;
+            }
+            
+            .modal-main-image {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .modal-additional-image {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background Elements -->
+    <div class="pokeball-bg" style="top: 10%; left: 5%; animation-duration: 25s; animation-delay: 0s;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg" alt="Pokeball" width="100%">
+    </div>
+    <div class="pokeball-bg" style="top: 30%; right: 8%; animation-duration: 30s; animation-delay: -5s;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg" alt="Pokeball" width="100%">
+    </div>
+    <div class="pokeball-bg" style="top: 60%; left: 15%; animation-duration: 20s; animation-delay: -8s;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg" alt="Pokeball" width="100%">
+    </div>
+    
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    
+    <!-- Scroll to Top Button -->
+    <div class="scroll-top" id="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal" id="pokemon-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span id="modal-pokemon-name">Pokemon Name</span>
+                    <div class="modal-id" id="modal-pokemon-id">#000</div>
+                </div>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-image-container">
+                    <div class="modal-main-image">
+                        <img id="modal-main-image" src="" alt="Pokemon">
+                    </div>
+                    <div class="modal-additional-images">
+                        <div class="modal-additional-image">
+                            <img id="modal-front-image" src="" alt="Front">
+                        </div>
+                        <div class="modal-additional-image">
+                            <img id="modal-back-image" src="" alt="Back">
+                        </div>
+                        <div class="modal-additional-image">
+                            <img id="modal-shiny-image" src="" alt="Shiny">
+                        </div>
+                    </div>
+                    <div class="pokemon-types" id="modal-types"></div>
+                </div>
+                <div class="modal-info">
+                    <div class="modal-section">
+                        <h3 class="section-title">About</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-name">Species:</span>
+                                <span class="stat-value" id="modal-species">Unknown</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-name">Height:</span>
+                                <span class="stat-value" id="modal-height">0 m</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-name">Weight:</span>
+                                <span class="stat-value" id="modal-weight">0 kg</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-name">Base XP:</span>
+                                <span class="stat-value" id="modal-base-xp">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-name">Order:</span>
+                                <span class="stat-value" id="modal-order">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-name">Habitat:</span>
+                                <span class="stat-value" id="modal-habitat">Unknown</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-section">
+                        <h3 class="section-title">Abilities</h3>
+                        <div class="abilities-list" id="modal-abilities"></div>
+                    </div>
+                    
+                    <div class="modal-section">
+                        <h3 class="section-title">Stats</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-name">HP:</span>
+                                <span class="stat-value" id="stat-hp">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-name">Attack:</span>
+                                <span class="stat-value" id="stat-attack">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-name">Defense:</span>
+                                <span class="stat-value" id="stat-defense">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-name">Sp. Attack:</span>
+                                <span class="stat-value" id="stat-special-attack">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-name">Sp. Defense:</span>
+                                <span class="stat-value" id="stat-special-defense">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-name">Speed:</span>
+                                <span class="stat-value" id="stat-speed">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-section">
+                        <h3 class="section-title">Moves</h3>
+                        <div class="moves-list" id="modal-moves"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1 class="logo">The Pokémon Database</h1>
+            <div class="creator">Created by shift_xd</div>
+            <p class="subtitle">Explore over 300 Pokémon with detailed information and stats</p>
+        </header>
+        
+        <!-- Navigation -->
+        <div class="nav-container">
+            <button class="nav-btn active" id="pokedex-btn">
+                <i class="fas fa-book"></i> Pokédex
+            </button>
+            <button class="nav-btn" id="history-btn">
+                <i class="fas fa-history"></i> Pokémon History
+            </button>
+        </div>
+
+        <!-- Pokedex Content -->
+        <div id="pokedex-content">
+            <div class="instructions">
+                <p>Search for any Pokémon by name or ID, or simply scroll down to explore our extensive collection of Pokémon!</p>
+                <p>Click on any Pokémon card to view detailed information. Try "pikachu", "charizard", or "25" for example!</p>
+            </div>
+
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Enter Pokémon name or ID...">
+                <button id="search-btn"><i class="fas fa-search"></i> Search Pokémon</button>
+            </div>
+
+            <div class="error-message" id="error-message">
+                Pokémon not found! Please try another name or ID.
+            </div>
+
+            <h2 class="featured-title">Pokémon Collection</h2>
+            <div class="content" id="pokemon-container">
+                <!-- Pokemon cards will be displayed here -->
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <div>Loading Pokémon database...</div>
+            </div>
+        </div>
+        
+        <!-- History Content -->
+        <div class="history-content" id="history-content">
+            <h2 class="history-title">The History of Pokémon</h2>
+            
+            <div class="history-section">
+                <h3>The Beginning</h3>
+                <p>Pokémon, short for "Pocket Monsters," was created by Satoshi Tajiri and Ken Sugimori. The franchise began in 1996 with the release of Pokémon Red and Green for the Game Boy in Japan. The games were an instant success, leading to an expansion of the franchise to include trading cards, an anime series, movies, merchandise, and more.</p>
+            </div>
+            
+            <div class="history-section">
+                <h3>Global Expansion</h3>
+                <p>In 1998, Pokémon made its way to North America with Pokémon Red and Blue. The franchise exploded in popularity, becoming a global phenomenon. The Pokémon anime series, featuring Ash Ketchum and his Pikachu, became one of the most successful anime series worldwide.</p>
+            </div>
+            
+            <div class="history-section">
+                <h3>Generations of Pokémon</h3>
+                <p>Over the years, Pokémon has expanded through multiple generations:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Generation 1 (1996):</strong> Original 151 Pokémon (Red, Blue, Yellow)</li>
+                    <li><strong>Generation 2 (1999):</strong> 100 new Pokémon (Gold, Silver, Crystal)</li>
+                    <li><strong>Generation 3 (2002):</strong> 135 new Pokémon (Ruby, Sapphire, Emerald)</li>
+                    <li><strong>Generation 4 (2006):</strong> 107 new Pokémon (Diamond, Pearl, Platinum)</li>
+                    <li><strong>Generation 5 (2010):</strong> 156 new Pokémon (Black, White)</li>
+                    <li><strong>Generation 6 (2013):</strong> 72 new Pokémon (X, Y)</li>
+                    <li><strong>Generation 7 (2016):</strong> 88 new Pokémon (Sun, Moon)</li>
+                    <li><strong>Generation 8 (2019):</strong> 89 new Pokémon (Sword, Shield)</li>
+                </ul>
+            </div>
+            
+            <div class="history-section">
+                <h3>Cultural Impact</h3>
+                <p>Pokémon has become one of the highest-grossing media franchises of all time. Its impact on popular culture is undeniable, with characters like Pikachu becoming globally recognized icons. The franchise continues to evolve with new games, apps (like Pokémon GO), and media releases.</p>
+            </div>
+            
+            <h3 class="section-title">Popular Pokémon YouTube Channels</h3>
+            <div class="youtube-channels">
+                <div class="channel-card">
+                    <div class="channel-image" style="background: #FF0000;">
+                        <img src="https://i.ytimg.com/vi/1roy4o4tqQM/maxresdefault.jpg" alt="Pokémon">
+                    </div>
+                    <div class="channel-info">
+                        <h4 class="channel-name">Pokémon</h4>
+                        <p class="channel-desc">The official Pokémon YouTube channel with news, trailers, and episodes.</p>
+                        <a href="https://www.youtube.com/@Pokemon" target="_blank" class="channel-link">Visit Channel</a>
+                    </div>
+                </div>
+                
+                <div class="channel-card">
+                    <div class="channel-image" style="background: #3B4CCA;">
+                        <img src="https://i.ytimg.com/vi/2M0G7m0FcFQ/maxresdefault.jpg" alt="Pokémon">
+                    </div>
+                    <div class="channel-info">
+                        <h4 class="channel-name">Pokémon Asia ENG</h4>
+                        <p class="channel-desc">Official Pokémon channel for Asia with exclusive content and updates.</p>
+                        <a href="https://www.youtube.com/@PokemonAsiaENG" target="_blank" class="channel-link">Visit Channel</a>
+                    </div>
+                </div>
+                
+                <div class="channel-card">
+                    <div class="channel-image" style="background: #FFDE00;">
+                        <img src="https://i.ytimg.com/vi/xLd22ha_-VU/maxresdefault.jpg" alt="Pokémon">
+                    </div>
+                    <div class="channel-info">
+                        <h4 class="channel-name">Truegreen7</h4>
+                        <p class="channel-desc">In-depth Pokémon analysis, lore, and competitive battling content.</p>
+                        <a href="https://www.youtube.com/@Truegreen7" target="_blank" class="channel-link">Visit Channel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <p>Created with the PokeAPI | The Pokémon Database © 2023</p>
+                <p>Created by <strong>shift_xd</strong> | Over 300 Pokémon available to explore!</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchBtn = document.getElementById('search-btn');
+            const searchInput = document.getElementById('search-input');
+            const pokemonContainer = document.getElementById('pokemon-container');
+            const errorMessage = document.getElementById('error-message');
+            const loadingElement = document.getElementById('loading');
+            const scrollTopBtn = document.getElementById('scroll-top');
+            const progressBar = document.getElementById('progress-bar');
+            const modal = document.getElementById('pokemon-modal');
+            const closeModal = document.getElementById('close-modal');
+            const pokedexBtn = document.getElementById('pokedex-btn');
+            const historyBtn = document.getElementById('history-btn');
+            const pokedexContent = document.getElementById('pokedex-content');
+            const historyContent = document.getElementById('history-content');
+            
+            // Array to store all Pokémon
+            let allPokemon = [];
+            
+            // Initial load with multiple Pokemon
+            loadPokemonDatabase();
+            
+            // Navigation events
+            pokedexBtn.addEventListener('click', () => {
+                pokedexBtn.classList.add('active');
+                historyBtn.classList.remove('active');
+                pokedexContent.style.display = 'block';
+                historyContent.style.display = 'none';
+            });
+            
+            historyBtn.addEventListener('click', () => {
+                historyBtn.classList.add('active');
+                pokedexBtn.classList.remove('active');
+                pokedexContent.style.display = 'none';
+                historyContent.style.display = 'block';
+            });
+            
+            // Search button event
+            searchBtn.addEventListener('click', () => {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                if (searchTerm) {
+                    searchPokemon(searchTerm);
+                }
+            });
+            
+            // Enter key event
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const searchTerm = searchInput.value.trim().toLowerCase();
+                    if (searchTerm) {
+                        searchPokemon(searchTerm);
+                    }
+                }
+            });
+            
+            // Scroll to top button
+            scrollTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Show/hide scroll to top button
+            window.addEventListener('scroll', () => {
+                // Progress bar
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                progressBar.style.width = scrolled + "%";
+                
+                // Scroll to top button
+                if (window.scrollY > 500) {
+                    scrollTopBtn.classList.add('show');
+                } else {
+                    scrollTopBtn.classList.remove('show');
+                }
+            });
+            
+            // Close modal
+            closeModal.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // Load Pokémon database
+            async function loadPokemonDatabase() {
+                loadingElement.style.display = 'flex';
+                pokemonContainer.innerHTML = '';
+                errorMessage.style.display = 'none';
+                
+                try {
+                    // Generate IDs for the first 300 Pokémon
+                    const pokemonIds = Array.from({length: 300}, (_, i) => i + 1);
+                    
+                    // Fetch all Pokémon in batches
+                    const batchSize = 30;
+                    for (let i = 0; i < pokemonIds.length; i += batchSize) {
+                        const batchIds = pokemonIds.slice(i, i + batchSize);
+                        const batchPromises = batchIds.map(id => fetchPokemonData(id));
+                        
+                        const batchResults = await Promise.allSettled(batchPromises);
+                        const successfulPokemon = batchResults
+                            .filter(result => result.status === 'fulfilled')
+                            .map(result => result.value);
+                        
+                        allPokemon = [...allPokemon, ...successfulPokemon];
+                        
+                        // Display the loaded Pokémon
+                        displayPokemonList(successfulPokemon);
+                        
+                        // Update loading text
+                        loadingElement.querySelector('div:last-child').textContent = 
+                            `Loaded ${allPokemon.length} of ${pokemonIds.length} Pokémon...`;
+                    }
+                    
+                    // Hide loading element after all Pokémon are loaded
+                    loadingElement.style.display = 'none';
+                } catch (error) {
+                    console.error('Error loading Pokémon database:', error);
+                    loadingElement.style.display = 'none';
+                    errorMessage.textContent = 'Failed to load Pokémon data. Please try again later.';
+                    errorMessage.style.display = 'block';
+                }
+            }
+            
+            // Fetch Pokémon data from API
+            async function fetchPokemonData(pokemonId) {
+                try {
+                    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
+                    
+                    if (!response.ok) {
+                        throw new Error('Pokémon not found');
+                    }
+                    
+                    return await response.json();
+                } catch (error) {
+                    console.error(`Error fetching Pokémon ${pokemonId}:`, error);
+                    return null;
+                }
+            }
+            
+            // Search for a Pokémon
+            async function searchPokemon(searchTerm) {
+                loadingElement.style.display = 'flex';
+                pokemonContainer.innerHTML = '';
+                errorMessage.style.display = 'none';
+                
+                try {
+                    // Check if searchTerm is a number
+                    const id = parseInt(searchTerm);
+                    if (!isNaN(id)) {
+                        // Search by ID
+                        const pokemon = await fetchPokemonData(id);
+                        if (pokemon) {
+                            displayPokemonList([pokemon]);
+                        } else {
+                            throw new Error('Pokémon not found');
+                        }
+                    } else {
+                        // Search by name
+                        const pokemon = await fetchPokemonData(searchTerm);
+                        if (pokemon) {
+                            displayPokemonList([pokemon]);
+                        } else {
+                            throw new Error('Pokémon not found');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error searching Pokémon:', error);
+                    errorMessage.style.display = 'block';
+                } finally {
+                    loadingElement.style.display = 'none';
+                }
+            }
+            
+            // Display multiple Pokemon
+            function displayPokemonList(pokemonList) {
+                const validPokemon = pokemonList.filter(p => p !== null);
+                
+                validPokemon.forEach(pokemon => {
+                    pokemonContainer.appendChild(createPokemonCard(pokemon));
+                });
+            }
+            
+            // Create Pokemon card
+            function createPokemonCard(pokemon) {
+                const pokemonId = pokemon.id.toString().padStart(3, '0');
+                
+                // Get types
+                const types = pokemon.types.map(type => {
+                    return `<span class="type-badge ${type.type.name}">${type.type.name}</span>`;
+                }).join('');
+                
+                const card = document.createElement('div');
+                card.className = 'pokemon-card';
+                card.innerHTML = `
+                    <div class="pokemon-image">
+                        <img src="${pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default}" alt="${pokemon.name}">
+                    </div>
+                    <h2 class="pokemon-name">${pokemon.name}</h2>
+                    <div class="pokemon-id">#${pokemonId}</div>
+                    <div class="pokemon-types">${types}</div>
+                `;
+                
+                // Add click event to show more details
+                card.addEventListener('click', () => {
+                    showPokemonDetails(pokemon);
+                });
+                
+                return card;
+            }
+            
+            // Show detailed view
+            async function showPokemonDetails(pokemon) {
+                // Show modal
+                modal.style.display = 'block';
+                
+                // Set basic info
+                document.getElementById('modal-pokemon-name').textContent = pokemon.name;
+                document.getElementById('modal-pokemon-id').textContent = `#${pokemon.id.toString().padStart(3, '0')}`;
+                
+                // Set images
+                document.getElementById('modal-main-image').src = pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default;
+                document.getElementById('modal-front-image').src = pokemon.sprites.front_default;
+                document.getElementById('modal-back-image').src = pokemon.sprites.back_default;
+                document.getElementById('modal-shiny-image').src = pokemon.sprites.front_shiny;
+                
+                // Set types
+                const typesContainer = document.getElementById('modal-types');
+                typesContainer.innerHTML = '';
+                pokemon.types.forEach(type => {
+                    const typeBadge = document.createElement('span');
+                    typeBadge.className = `type-badge ${type.type.name}`;
+                    typeBadge.textContent = type.type.name;
+                    typesContainer.appendChild(typeBadge);
+                });
+                
+                // Set about info
+                document.getElementById('modal-species').textContent = pokemon.species.name;
+                document.getElementById('modal-height').textContent = `${pokemon.height / 10}m`;
+                document.getElementById('modal-weight').textContent = `${pokemon.weight / 10}kg`;
+                document.getElementById('modal-base-xp').textContent = pokemon.base_experience;
+                document.getElementById('modal-order').textContent = pokemon.order;
+                document.getElementById('modal-habitat').textContent = "Various"; // Simplified for this demo
+                
+                // Set abilities
+                const abilitiesContainer = document.getElementById('modal-abilities');
+                abilitiesContainer.innerHTML = '';
+                pokemon.abilities.forEach(ability => {
+                    const abilityBadge = document.createElement('span');
+                    abilityBadge.className = 'ability-badge';
+                    abilityBadge.textContent = ability.ability.name;
+                    abilitiesContainer.appendChild(abilityBadge);
+                });
+                
+                // Set stats
+                document.getElementById('stat-hp').textContent = pokemon.stats[0].base_stat;
+                document.getElementById('stat-attack').textContent = pokemon.stats[1].base_stat;
+                document.getElementById('stat-defense').textContent = pokemon.stats[2].base_stat;
+                document.getElementById('stat-special-attack').textContent = pokemon.stats[3].base_stat;
+                document.getElementById('stat-special-defense').textContent = pokemon.stats[4].base_stat;
+                document.getElementById('stat-speed').textContent = pokemon.stats[5].base_stat;
+                
+                // Set moves (first 10 moves)
+                const movesContainer = document.getElementById('modal-moves');
+                movesContainer.innerHTML = '';
+                pokemon.moves.slice(0, 10).forEach(move => {
+                    const moveBadge = document.createElement('span');
+                    moveBadge.className = 'move-badge';
+                    moveBadge.textContent = move.move.name;
+                    movesContainer.appendChild(moveBadge);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
