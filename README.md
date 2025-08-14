@@ -1,47 +1,53 @@
-🗂️ The Pokémon Database
-<img width="950" height="231" alt="brave_screenshot_pokemonxd netlify app" src="https://github.com/user-attachments/assets/a4ab7bdf-11cf-4832-9c7d-a59b8ad28c93" />
+# 🗂️ The Pokémon Database  
+<img width="950" height="231" alt="brave_screenshot_pokemonxd netlify app" src="https://github.com/user-attachments/assets/55bfa081-693f-4a1a-8b08-dc57180bda54" />
 
 
-Created by: shift_xd
+**Created by:** shift_xd  
 
-Explore over 300 Pokémon with detailed stats, images, and history in a clean, user-friendly interface.
+Explore over **300 Pokémon** with detailed stats, images, and history in a clean, user-friendly interface.  
 
-🌟 Features
+---
 
-🔍 Search Pokémon
-Search by Pokémon name or ID (e.g., pikachu, charizard, or 25).
+## 🌟 Features  
 
-📚 Pokédex
-Browse a visual Pokédex with Pokémon images, names, and types.
+- **🔍 Search Pokémon**  
+  Search by Pokémon **name** or **ID** (e.g., `pikachu`, `charizard`, or `25`).  
 
-📜 Pokémon History
-Learn about the Pokémon franchise's history and evolution.
+- **📚 Pokédex**  
+  Browse a visual Pokédex with Pokémon images, names, and types.  
 
-📖 Detailed Pokémon Info
-Click on a Pokémon card to view stats, abilities, types, and other details.
+- **📜 Pokémon History**  
+  Learn about the Pokémon franchise's history and evolution.  
 
-💡 Smart Suggestions
-Search bar gives examples and hints for better navigation.
+- **📖 Detailed Pokémon Info**  
+  Click on a Pokémon card to view **stats**, **abilities**, **types**, and other details.  
 
-🎨 Modern UI
-Clean and responsive design with retro Pokémon-style header.
+- **💡 Smart Suggestions**  
+  Search bar gives examples and hints for better navigation.  
 
-🚀 How to Use
-<img width="1423" height="477" alt="brave_screenshot_pokemonxd netlify app (1)" src="https://github.com/user-attachments/assets/65829e34-3c24-429c-ab03-5ae0a25962f5" />
+- **🎨 Modern UI**  
+  Clean and responsive design with retro Pokémon-style header.  
 
+---
 
-Open the application in your browser.
+## 🚀 How to Use  
 
-Search by typing a Pokémon name or ID in the search box.
+1. Open the application in your browser.  
+2. **Search** by typing a Pokémon name or ID in the search box.  
+3. Or click **Pokédex** to scroll and explore visually.  
+4. Click any Pokémon card for detailed information.  
+5. Visit **Pokémon History** for franchise insights.  
 
-Or click Pokédex to scroll and explore visually.
+---
 
-Click any Pokémon card for detailed information.
+## 🛠️ Tech Stack  
 
-Visit Pokémon History for franchise insights.
+- **Frontend:** HTML, CSS, JavaScript  
+- **API:** [PokéAPI](https://pokeapi.co/) for live Pokémon data  
 
-🛠️ Tech Stack
+---
 
-Frontend: HTML, CSS, JavaScript
+## 📷 Screenshot  
 
-API: PokéAPI for live Pokémon data
+<img width="1423" height="477" alt="brave_screenshot_pokemonxd netlify app (1)" src="https://github.com/user-attachments/assets/ce98c2d0-a0d1-4020-97db-ceabb676c0eb" />
+
